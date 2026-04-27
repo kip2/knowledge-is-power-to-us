@@ -80,9 +80,9 @@ const config: QuartzConfig = {
       fontOrigin: "googleFonts",
       cdnCaching: true,
       typography: {
-        header: "Schibsted Grotesk",
-        body: "Source Sans Pro",
-        code: "IBM Plex Mono",
+        header: "Noto Sans JP",
+        body: "Noto Sans JP",
+        code: "JetBrains Mono",
       },
       colors: {
         lightMode: {

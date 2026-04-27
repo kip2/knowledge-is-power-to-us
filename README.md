@@ -187,12 +187,25 @@ git add content && git commit -m "update: ..." && git push
 
 ## カスタマイズ
 
+サイトの設定変更は **`overrides/` 配下のファイルを編集する** のが基本です。`overrides/` は bootstrap.sh が毎回 root にコピーする「上書き元」になっており、ローカル / CI のどちらでも同じ設定が適用されます。Quartz 本体（`quartz/`）は git ignore + bootstrap が毎回フレッシュに取得する設計なので、**直接編集してはいけません**（再 bootstrap で消えます）。
+
+```
+overrides/quartz.config.ts   ← サイト設定（テーマ・OGP・プラグイン）
+overrides/quartz.layout.ts   ← レイアウト（ヘッダー・左右カラム構成）
+overrides/deploy.yml         ← GitHub Actions の workflow
+```
+
 | 何を変えるか | どこを編集 |
 |---|---|
 | サイトタイトル・URL | `.publish.config` (ローカル) / GitHub Variables (CI) |
-| レイアウト・テーマ | `overrides/quartz.layout.ts` `overrides/quartz.config.ts` |
+| サイトのテーマ・色・フォント | `overrides/quartz.config.ts` の `configuration.theme` |
+| OGP・プラグイン構成 | `overrides/quartz.config.ts` の `plugins` |
+| 左右カラムの構成・ヘッダー | `overrides/quartz.layout.ts` |
+| Actions の workflow | `overrides/deploy.yml` |
 | Quartz のバージョン | `quartz.version` を書き換えて `./bootstrap.sh --force` |
 | コンテンツライセンス | `LICENSE` を書き換え（`LICENSE-Quartz.txt` には触らない） |
+
+編集後は `./do-sync.sh` でローカルプレビュー、`./do-push.sh "..."` で公開できます。
 
 ## Documents
 
