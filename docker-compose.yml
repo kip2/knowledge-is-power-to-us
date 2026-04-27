@@ -66,6 +66,10 @@ services:
         npx quartz build
 
   # 個別作業用の対話シェル
+  # entrypoint を bash に明示するのは、`docker compose run --rm shell -c "..."` の
+  # ように `-c ...` を渡された場合に、node:slim の ENTRYPOINT (docker-entrypoint.sh)
+  # が `node` を前置してしまうのを防ぐため。
   shell:
     <<: *base
-    command: bash
+    entrypoint: ["bash"]
+    command: []

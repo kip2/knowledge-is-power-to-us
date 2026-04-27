@@ -108,7 +108,7 @@ npx quartz build --serve      # http://localhost:8080 でプレビュー
   - サイトに掲載する記事・画像・スクショなど**自作コンテンツのライセンスは利用者本人が選んで明記する責任があります**
   - 参考になるライセンスの一覧は `LICENSE` 内のコメントに列挙されています（CC BY 4.0 / CC BY-SA 4.0 / CC BY-NC 4.0 / CC0 / All Rights Reserved 等）
   - スクショ・引用コード・他者画像など第三者素材を含める場合は、それらが元の権利者の所有物であることを明記してください
-- [ ] **`README.md`** をあなたのサイト用の説明に書き換え（このテンプレ説明は不要なはず）
+- [ ] **`README.md`** をあなたのサイト用の説明に書き換え
 
 ### 2. push
 
@@ -120,7 +120,24 @@ git commit -m "initial: my notes site"
 git push
 ```
 
-リポジトリの **Settings → Pages → Source** を **GitHub Actions** に変更すると、Actions が動き始めて GitHub Pages にデプロイされる。詳細は [documents/SETUP.md](./documents/SETUP.md)。
+### 3. GitHub Pages を有効化（**必須・初回のみ**）
+
+「Use this template」で作成したリポジトリでは **GitHub Pages がデフォルトで無効** になっている。push 後に Actions が走っても、deploy ステップで以下のようなエラーで止まるため、初回だけ手動で有効化する必要がある。
+
+```
+Error: Failed to create deployment (status: 404)
+Ensure GitHub Pages has been enabled: https://github.com/YOUR_NAME/YOUR_REPO/settings/pages
+```
+
+手順:
+
+1. リポジトリの **Settings → Pages** を開く
+   （URL 直打ちなら `https://github.com/YOUR_NAME/YOUR_REPO/settings/pages`）
+2. **Source** のドロップダウンを **「GitHub Actions」** に変更して保存
+3. **Actions タブ** に戻って失敗していたワークフローを **「Re-run all jobs」** で再実行
+   （または何かもう一度 commit して push すれば自動的に走る）
+
+成功すると `https://YOUR_NAME.github.io/YOUR_REPO/` でサイトが見られる。次回以降の push ではこの手順は不要。詳細は [documents/SETUP.md](./documents/SETUP.md)。
 
 ## Daily workflow（運用が始まったら）
 
@@ -152,7 +169,7 @@ Docker の場合:
 
 ```bash
 cd my-notes
-docker compose run --rm shell -c "./sync.sh"
+docker compose run --rm shell bash -c "./sync.sh"
 git add content && git commit -m "update: ..." && git push
 ```
 
