@@ -1,76 +1,22 @@
 ================================================================================
-⚠️  IMPORTANT — このファイルは利用者が必ず編集する必要があります
+Content License — All Rights Reserved
 ================================================================================
 
-これはテンプレート同梱のプレースホルダ LICENSE です。**このリポジトリを clone /
-"Use this template" した時点で、利用者がコンテンツのライセンスを自分の責任で
-決定して書き換える必要があります**。
+Copyright (c) 2026 kip2
 
-テンプレート提供者はコンテンツのライセンスについて推奨や保証を行いません。
-下記は世間で広く使われているライセンスの一覧（参考情報）です。利用者は自身の
-判断で適切なものを選び、このファイルを書き換えてください。
+All Rights Reserved.
 
+本リポジトリ内の original content（記事本文、ノート、画像、図表など著作者
+本人が作成したもの）は、著作権法上の全権利を著作者が留保します。
+事前の書面による許諾なく、複製・転載・改変・再配布・商用利用・翻訳・
+派生作品の作成を禁止します。
 
-================================================================================
-編集が必要な項目
-================================================================================
+引用は著作権法上認められる範囲（出所明示・必要最小限・主従関係の
+明確化など）に限り可能です。
 
-1. {{YEAR}} と {{Your Name}} を自分の値に置換
-2. コンテンツのライセンス本文（下記「Content License」セクション）を
-   自分が選んだライセンスの正式な文面に差し替える
-3. 第三者素材（スクショ・引用コード・他者画像など）の扱いを必要に応じて記述
-
-`LICENSE-Quartz.txt` (Quartz の MIT) は削除しないでください。Quartz エンジンを
-ビルド時に取得して利用しているため、courtesy として保持しておきます。
-
-
-================================================================================
-コンテンツのライセンス選択肢（参考・推奨ではありません）
-================================================================================
-
-以下は世間で使われているライセンスの一覧です。それぞれ性質が異なり、利用者の
-目的に応じて適切なものは変わります。各ライセンスの正式な文面・適用条件は
-公式ドキュメントを必ず参照してください。
-
-  - Creative Commons Attribution 4.0 International (CC BY 4.0)
-      https://creativecommons.org/licenses/by/4.0/
-
-  - Creative Commons Attribution-ShareAlike 4.0 (CC BY-SA 4.0)
-      https://creativecommons.org/licenses/by-sa/4.0/
-
-  - Creative Commons Attribution-NonCommercial 4.0 (CC BY-NC 4.0)
-      https://creativecommons.org/licenses/by-nc/4.0/
-
-  - Creative Commons Zero / Public Domain Dedication (CC0 1.0)
-      https://creativecommons.org/publicdomain/zero/1.0/
-
-  - All Rights Reserved (デフォルトの著作権、明示的な許諾なし)
-
-
-第三者素材（ソフトのスクショ、他人のコード、引用文、画像等）について:
-ライセンスは「利用者自身が著作権を持つもの」にしか付与できません。記事内に
-他者の著作物を含める場合、それらは元の権利者の所有物のままです。利用者は
-公開前に各素材の利用許諾・引用要件を確認してください。
-
-
-================================================================================
-Content License — TODO: 利用者がここを書き換える
-================================================================================
-
-Copyright (c) {{YEAR}} {{Your Name}}
-
-⚠️ このセクションには、上記の選択肢から選んだライセンスの正式な文面を貼り付けて
-   ください。テンプレート提供者は具体的なライセンスを推奨しません。
-
-例（CC BY 4.0 を選んだ場合の見出し例。本文は公式の legalcode を参照）:
-
-  This site's original content is licensed under
-  Creative Commons Attribution 4.0 International (CC BY 4.0).
-  https://creativecommons.org/licenses/by/4.0/legalcode
-
-  This license applies only to my original contributions. Third-party
-  materials (software screenshots, quoted code, embedded images, etc.)
-  remain the property of their respective rights holders.
+第三者素材（ソフトのスクショ、他人のコード、引用文、埋め込み画像等）は
+元の権利者に帰属し、本宣言の対象外です。各素材の利用条件は元のライセンス
+に従ってください。
 
 
 ================================================================================
@@ -84,7 +30,7 @@ Code License — テンプレート由来のスクリプト・設定
 
 MIT License
 
-Copyright (c) {{YEAR}} {{Your Name}}
+Copyright (c) 2026 kip2
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
