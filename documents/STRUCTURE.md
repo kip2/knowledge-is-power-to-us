@@ -31,18 +31,18 @@
 │   ├── .gitattributes                  ← EOL を LF に統一
 │   ├── .node-version                   ← nvm/asdf 用 Node バージョン指示
 │   ├── .npmrc                          ← engine-strict=true
-│   ├── .prettierrc / .prettierignore   ← フォーマッタ設定
-│   ├── package.json / package-lock.json ← Quartz 依存（npm ci で再現）
-│   ├── tsconfig.json                   ← TypeScript 設定
-│   ├── globals.d.ts / index.d.ts       ← Quartz の TS 環境型定義
-│   ├── quartz.config.ts                ← サイト設定（overrides/ から bootstrap で配置）
-│   └── quartz.layout.ts                ← レイアウト設定（同上）
+│   └── package.json / package-lock.json ← Quartz 依存（npm ci で再現）
 │
 └── [git ignore — bootstrap.sh / npm / build が生成]
     ├── quartz/                         ← Quartz エンジン本体 (bootstrap.sh が取得)
     ├── node_modules/                   ← npm install 後
     ├── public/                         ← quartz build 出力
     ├── .quartz-cache/                  ← ビルドキャッシュ
+    ├── quartz.config.ts                ← overrides/quartz.config.ts から bootstrap が生成
+    ├── quartz.layout.ts                ← overrides/quartz.layout.ts から bootstrap が生成
+    ├── globals.d.ts / index.d.ts       ← Quartz upstream の TS ambient 型定義
+    ├── tsconfig.json                   ← Quartz upstream の TS ビルド設定
+    ├── .prettierrc / .prettierignore   ← Quartz upstream のフォーマッタ設定
     ├── .publish.config                 ← マシン依存設定（個人情報含む）
     └── .env                            ← Docker 用の VAULT_PUBLISH_DIR 等
 ```
@@ -64,7 +64,6 @@
 |---|---|
 | `docs/` (91 files, 2.3MB) | Quartz framework 自身のドキュメント。`content/` ではないので**サイトには表示されない**死蔵ファイル |
 | `CODE_OF_CONDUCT.md` | Quartz プロジェクトの行動規範。サイト運用には無関係 |
-| `Dockerfile` | Quartz の Docker ビルド用。GitHub Pages 経由のデプロイでは不要 |
 | `.github/FUNDING.yml` | Quartz 開発者向け寄付リンク |
 | `.github/dependabot.yml` | Quartz 自身の依存更新（残しておくと意図しない PR が大量発生する） |
 | `.github/ISSUE_TEMPLATE/` | Quartz の Issue テンプレ |
@@ -82,13 +81,21 @@
 |---|---|
 | `package.json` / `package-lock.json` | `npm ci` で同一依存関係を再現するため CI に必須 |
 | `LICENSE-Quartz.txt` | Quartz 配布物の著作権表示を保持する courtesy ファイル（gitignore でも法的にOKだが、明示しておく方が筋が良い） |
-| `globals.d.ts` / `index.d.ts` | Quartz が要求する TypeScript ambient 型定義 |
-| `tsconfig.json` | Quartz の TS ビルドに必須 |
 | `.gitattributes` (`* text=auto eol=lf`) | クロスプラットフォームで EOL を統一 |
 | `.node-version` (`v22.16.0`) | nvm/asdf でローカル Node バージョン自動選択 |
 | `.npmrc` (`engine-strict=true`) | Node バージョン要件を強制 |
-| `.prettierrc` / `.prettierignore` | コードフォーマッタ設定。任意だが小さいので保持 |
 | `quartz.version` | Quartz の取得バージョンを pin（再現可能ビルドのため） |
+| `Dockerfile` | Docker 運用のための実行環境（自前イメージ）。bootstrap.sh の skip-existing で温存される |
+
+### 3-A. リポジトリに含めず bootstrap で再生成するもの
+
+以下は Quartz upstream または `overrides/` から `./bootstrap.sh` 実行時に自動生成されるため、リポジトリに commit せず `.gitignore` 対象とする。初回チェックアウト直後はこれらが存在しないため、IDE の TypeScript 解析や `npx quartz build` を試す前に必ず `./bootstrap.sh` を実行する必要がある。
+
+| ファイル | 生成元 |
+|---|---|
+| `quartz.config.ts` / `quartz.layout.ts` | `overrides/` から bootstrap.sh がコピー |
+| `globals.d.ts` / `index.d.ts` / `tsconfig.json` | Quartz upstream の git clone から取得 |
+| `.prettierrc` / `.prettierignore` | 同上（任意のフォーマッタ設定） |
 
 ## 3-A. `quartz/` を gitignore する設計
 

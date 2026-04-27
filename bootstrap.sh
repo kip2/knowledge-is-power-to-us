@@ -95,10 +95,14 @@ if [[ ! -d quartz ]]; then
     # - .github: Quartz の workflow / governance（後段で deploy.yml だけ復元）
     # - docs:    Quartz framework 自体の説明書（quartz.jzhao.xyz 相当）
     # - CODE_OF_CONDUCT.md: Quartz プロジェクトの行動規範
-    # - Dockerfile: Quartz の Docker ビルド（GitHub Pages 経由なら不要）
     # - LICENSE.txt: LICENSE-Quartz.txt にリネーム保持
+    #
+    # NOTE: Dockerfile は意図的に消さない。テンプレ自身が Docker 運用のために
+    # 自前の Dockerfile を commit しており、上の move ループの "skip existing"
+    # で Quartz upstream の Dockerfile は流入しないため、ここで rm すると
+    # 我々の Dockerfile を消してしまう。
     echo "🧹 cleaning Quartz's upstream-only files"
-    rm -rf .github docs CODE_OF_CONDUCT.md Dockerfile
+    rm -rf .github docs CODE_OF_CONDUCT.md
     if [[ -f LICENSE.txt && ! -f LICENSE-Quartz.txt ]]; then
         mv LICENSE.txt LICENSE-Quartz.txt
         echo "  ✓ LICENSE.txt → LICENSE-Quartz.txt"

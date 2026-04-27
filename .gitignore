@@ -10,6 +10,18 @@ quartz/
 public/
 .quartz-cache/
 
+# Quartz upstream または overrides/ から bootstrap.sh が再生成するファイル
+# - quartz.config.ts / quartz.layout.ts は overrides/ をコピーして作成
+# - globals.d.ts / index.d.ts / tsconfig.json は Quartz upstream から取得
+# - .prettierrc / .prettierignore も Quartz upstream 由来
+/quartz.config.ts
+/quartz.layout.ts
+/globals.d.ts
+/index.d.ts
+/tsconfig.json
+/.prettierrc
+/.prettierignore
+
 # OS
 .DS_Store
 Thumbs.db
