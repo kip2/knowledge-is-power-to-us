@@ -1,0 +1,31 @@
+# Node
+node_modules/
+package-lock.json.backup
+npm-debug.log*
+
+# Quartz framework source (bootstrap.sh で取得、リポジトリには含めない)
+quartz/
+
+# Quartz build outputs
+public/
+.quartz-cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Local environment
+.env
+.env.local
+
+# 個別環境の publish-site 設定（マシン依存なので追跡しない）
+.publish.config
+
+# Bootstrap 中の一時ファイル
+*.tmp

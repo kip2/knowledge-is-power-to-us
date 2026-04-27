@@ -1,0 +1,13 @@
+# 通常 docker-compose は bind mount で動かすため、このファイルは
+# `docker build` を直接実行する場合のみ意味を持つ（イメージへのコピー除外）。
+
+node_modules/
+quartz/
+public/
+.quartz-cache/
+.git/
+.publish.config
+.env
+*.log
+.DS_Store
+documents/

@@ -1,0 +1,71 @@
+# docker-compose.yml
+#
+# Node.js などをホストに入れずに Quartz サイトをビルド/プレビューする。
+#
+# 使い方:
+#   1. リポジトリ直下に `.env` を作成し VAULT_PUBLISH_DIR を記入
+#      （未作成のままでも起動可能。サイトに「.env 未設定」警告が表示される）
+#   2. docker compose up preview            # http://localhost:8080
+#   3. docker compose run --rm build        # public/ への静的ビルドのみ
+#   4. docker compose run --rm shell        # コンテナ内 bash で個別操作
+#
+# 共通設定は YAML アンカーで定義し、各サービスに継承する。
+
+x-base: &base
+  build: .
+  working_dir: /app
+  # ホスト側生成ファイルが root 所有にならないよう UID/GID を引き継ぐ
+  # （未指定時は root で動作。Linux ユーザーは .env で `USER_ID=$(id -u)` 等を推奨）
+  user: "${USER_ID:-0}:${GROUP_ID:-0}"
+  volumes:
+    # プロジェクト全体（quartz/ や node_modules/ もここに生まれる）
+    - .:/app
+    # ホスト側 Vault の publish/ を read-only でマウント。
+    # VAULT_PUBLISH_DIR 未設定時は ./.no-vault-stub（空ディレクトリ）にフォールバック。
+    # この場合 sync.sh は同期をスキップし、コンテナ内でサイトに警告バナーを表示する。
+    - "${VAULT_PUBLISH_DIR:-./.no-vault-stub}:/vault-publish:ro"
+  environment:
+    # コンテナ内では sync.sh がここを source として使う
+    VAULT_PUBLISH_DIR: /vault-publish
+    # ホスト側 .env で VAULT_PUBLISH_DIR が指定されていたかを sync.sh に伝える
+    # （未指定なら空文字、指定されていればそのパス）
+    HOST_VAULT_PUBLISH_DIR: "${VAULT_PUBLISH_DIR:-}"
+    # サイト設定（未設定時はそれぞれフォールバック）
+    QUARTZ_BASE_URL: ${QUARTZ_BASE_URL:-localhost:8080}
+    QUARTZ_PAGE_TITLE: ${QUARTZ_PAGE_TITLE:-Notes}
+    # bootstrap.sh の対話プロンプトをスキップ
+    CI: "true"
+
+services:
+  # ローカルプレビュー (http://localhost:8080)
+  preview:
+    <<: *base
+    ports:
+      - "8080:8080"
+    command:
+      - bash
+      - -c
+      - |
+        set -euo pipefail
+        ./bootstrap.sh --ci
+        [ -d node_modules ] || npm ci
+        ./sync.sh
+        npx quartz build --serve --port 8080
+
+  # 静的ビルドのみ (public/ を更新)
+  build:
+    <<: *base
+    command:
+      - bash
+      - -c
+      - |
+        set -euo pipefail
+        ./bootstrap.sh --ci
+        [ -d node_modules ] || npm ci
+        ./sync.sh
+        npx quartz build
+
+  # 個別作業用の対話シェル
+  shell:
+    <<: *base
+    command: bash

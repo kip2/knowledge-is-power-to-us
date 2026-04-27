@@ -1,0 +1,116 @@
+================================================================================
+⚠️  IMPORTANT — このファイルは利用者が必ず編集する必要があります
+================================================================================
+
+これはテンプレート同梱のプレースホルダ LICENSE です。**このリポジトリを clone /
+"Use this template" した時点で、利用者がコンテンツのライセンスを自分の責任で
+決定して書き換える必要があります**。
+
+テンプレート提供者はコンテンツのライセンスについて推奨や保証を行いません。
+下記は世間で広く使われているライセンスの一覧（参考情報）です。利用者は自身の
+判断で適切なものを選び、このファイルを書き換えてください。
+
+
+================================================================================
+編集が必要な項目
+================================================================================
+
+1. {{YEAR}} と {{Your Name}} を自分の値に置換
+2. コンテンツのライセンス本文（下記「Content License」セクション）を
+   自分が選んだライセンスの正式な文面に差し替える
+3. 第三者素材（スクショ・引用コード・他者画像など）の扱いを必要に応じて記述
+
+`LICENSE-Quartz.txt` (Quartz の MIT) は削除しないでください。Quartz エンジンを
+ビルド時に取得して利用しているため、courtesy として保持しておきます。
+
+
+================================================================================
+コンテンツのライセンス選択肢（参考・推奨ではありません）
+================================================================================
+
+以下は世間で使われているライセンスの一覧です。それぞれ性質が異なり、利用者の
+目的に応じて適切なものは変わります。各ライセンスの正式な文面・適用条件は
+公式ドキュメントを必ず参照してください。
+
+  - Creative Commons Attribution 4.0 International (CC BY 4.0)
+      https://creativecommons.org/licenses/by/4.0/
+
+  - Creative Commons Attribution-ShareAlike 4.0 (CC BY-SA 4.0)
+      https://creativecommons.org/licenses/by-sa/4.0/
+
+  - Creative Commons Attribution-NonCommercial 4.0 (CC BY-NC 4.0)
+      https://creativecommons.org/licenses/by-nc/4.0/
+
+  - Creative Commons Zero / Public Domain Dedication (CC0 1.0)
+      https://creativecommons.org/publicdomain/zero/1.0/
+
+  - All Rights Reserved (デフォルトの著作権、明示的な許諾なし)
+
+
+第三者素材（ソフトのスクショ、他人のコード、引用文、画像等）について:
+ライセンスは「利用者自身が著作権を持つもの」にしか付与できません。記事内に
+他者の著作物を含める場合、それらは元の権利者の所有物のままです。利用者は
+公開前に各素材の利用許諾・引用要件を確認してください。
+
+
+================================================================================
+Content License — TODO: 利用者がここを書き換える
+================================================================================
+
+Copyright (c) {{YEAR}} {{Your Name}}
+
+⚠️ このセクションには、上記の選択肢から選んだライセンスの正式な文面を貼り付けて
+   ください。テンプレート提供者は具体的なライセンスを推奨しません。
+
+例（CC BY 4.0 を選んだ場合の見出し例。本文は公式の legalcode を参照）:
+
+  This site's original content is licensed under
+  Creative Commons Attribution 4.0 International (CC BY 4.0).
+  https://creativecommons.org/licenses/by/4.0/legalcode
+
+  This license applies only to my original contributions. Third-party
+  materials (software screenshots, quoted code, embedded images, etc.)
+  remain the property of their respective rights holders.
+
+
+================================================================================
+Code License — テンプレート由来のスクリプト・設定
+================================================================================
+
+このリポジトリのテンプレ由来のコード（`bootstrap.sh`, `sync.sh`, `overrides/`,
+設定ファイル群）は MIT License で提供されます。利用者が追加で書いたスクリプト
+についても、特に明記しない限り MIT License のもとで提供することを推奨します
+（変更したい場合は本セクションを書き換えてください）。
+
+MIT License
+
+Copyright (c) {{YEAR}} {{Your Name}}
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+
+================================================================================
+Quartz framework
+================================================================================
+
+Quartz v4 (https://github.com/jackyzha0/quartz) は MIT License で配布
+されています。原著作権表示は `LICENSE-Quartz.txt` を参照。
+
+`bootstrap.sh` がビルド時に Quartz を取得しますが、Quartz 由来のコードを
+再利用する場合は MIT License の条件に従ってください。

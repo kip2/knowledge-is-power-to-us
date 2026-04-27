@@ -1,0 +1,38 @@
+# .publish.config.example
+#
+# このファイルを `.publish.config` にコピーして、自分のマシンに合わせて編集してください。
+#
+#   cp .publish.config.example .publish.config
+#
+# `.publish.config` は git 追跡対象外（.gitignore 済み）。
+# マシンごとに異なる値を持てます。
+#
+# 形式は YAML のサブセット (フラットな key: value のみ)。
+# - コメントは `#` で始める
+# - 値に `:` を含めたい場合は "..." または '...' で囲む
+# - ネストや配列は非対応
+
+
+# ── 必須 ──────────────────────────────────────────────────────
+
+# 公開対象 Vault の publish/ フォルダ（絶対パス推奨、~ も使用可）
+vault_publish_dir: /home/User/Documents/main_vault/publish
+
+
+# ── サイト設定（任意・ローカルビルド用） ──────────────────────
+#
+# サイトタイトルと baseUrl をここに書くと、ローカルビルド時に反映される。
+# GitHub Actions では deploy.yml が github コンテキストから自動派生するため
+# このファイルの値は CI には影響しない。
+#
+# base_url 形式: "<github_user>.github.io/<repo>" or "your-domain.com"
+# プロトコル無し・末尾スラッシュ無し
+
+# page_title: "Notes"
+# base_url: USERNAME.github.io/REPO_NAME
+
+
+# ── 任意（将来追加予定） ──────────────────────────────────────
+
+# preview_port: 8080
+# extra_excludes: "*.draft.md"
