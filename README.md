@@ -158,17 +158,29 @@ Ensure GitHub Pages has been enabled: https://github.com/YOUR_NAME/YOUR_REPO/set
                                     └──────────────────────────┘         └──────────────────┘
 ```
 
-ネイティブの場合:
+### ラッパースクリプト（推奨）
+
+毎回 `sync` → `git add` → `commit` → `push` を打つのが面倒なので、ラッパーを2つ用意している。両方とも Docker / native を自動判定する。
 
 ```bash
-cd my-notes
+./do-sync.sh                            # 同期だけ実行（プレビュー確認用）
+./do-push.sh "update: 新しい記事を追加"  # 同期 + commit + push を一括
+./do-push.sh                            # commit message を対話的に入力
+```
+
+`./do-push.sh` は content/ に変更が無ければ何もせず終了し、`origin` が未設定なら commit までで止まる。明示的にモードを指定したい場合は `./do-push.sh --docker "msg..."` / `./do-push.sh --native "msg..."`。
+
+### 個別コマンドで動かす場合
+
+ネイティブ:
+
+```bash
 ./sync.sh && git add content && git commit -m "update: ..." && git push
 ```
 
-Docker の場合:
+Docker:
 
 ```bash
-cd my-notes
 docker compose run --rm shell bash -c "./sync.sh"
 git add content && git commit -m "update: ..." && git push
 ```
