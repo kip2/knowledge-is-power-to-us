@@ -72,6 +72,15 @@ docker compose up preview
 
 初回は Quartz の取得・依存インストールで 1〜2 分かかる。2回目以降は `node_modules/` `quartz/` がホスト側のディレクトリに残るので速い。
 
+`preview` は Vault の `publish/` を **直接 serve する**（`content/` への同期を挟まない）。Quartz の `build --serve` がそのディレクトリを監視しているため、Obsidian で保存すればリビルドされブラウザが自動リロードされる。同期コマンドを手で叩く必要はない。
+
+ホスト側の 8080 が他のアプリに使われている場合は `.env` で変更する。
+
+```env
+PREVIEW_PORT=8090
+QUARTZ_BASE_URL=localhost:8090
+```
+
 ### D-4. 公開ビルド（任意）
 
 CI と同じ手順を手元で再現する:
@@ -217,6 +226,8 @@ npx quartz build --serve
 
 `http://localhost:8080` で確認。レイアウトに不満があれば `quartz.layout.ts` を編集。
 
+> **Docker 版との違い**: こちらは `content/` を監視するため、Vault 側でノートを編集しても自動では反映されない。別ターミナルで `./sync.sh` を実行すると `content/` が更新され、それを検知してリロードされる。Vault を直接監視したい場合は `npx quartz build --serve -d "$VAULT_PUBLISH_DIR"` を使う（Docker 版の `preview` と同じ挙動）。
+
 ## ステップ7: GitHub リポジトリを作成
 
 GitHub にログインして新規リポジトリを作る:
@@ -251,16 +262,26 @@ git push -u origin main
 ## 日々の運用ループ
 
 ```bash
-# Obsidian で <vault>/publish/ のノートを編集
-
 cd ~/Programfiles/Obsidian/publish-site
-./sync.sh                        # publish/ → content/
-git status                       # 何が変わったか確認
-git add content
-git commit -m "update: 記事タイトル"
-git push
+
+docker compose up preview        # プレビューを起動したまま…
+# Obsidian で <vault>/publish/ のノートを編集（保存するたび自動リロード）
+
+./do-push.sh "update: 記事タイトル"
+# 同期 → git add content → commit → push まで一括
 # 1〜3 分で公開反映
 ```
+
+`do-push.sh` は内部で `do-sync.sh` を呼び、Docker / ネイティブを自動判定する（`--docker` / `--native` で強制可）。`content/` に差分が無ければ commit はスキップされる。
+
+公開前に差分だけ見たい場合は同期を分けて実行する。
+
+```bash
+./do-sync.sh
+git diff --stat content
+```
+
+素の `sync.sh` を直接叩くこともできるが、その場合は Node/rsync がホストに必要になる。
 
 ## 自動同期したい場合（オプション）
 

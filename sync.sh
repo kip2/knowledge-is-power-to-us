@@ -194,6 +194,8 @@ echo "   from: $SRC"
 echo "   to:   $DST"
 echo
 
+# 除外リストを変更したら overrides/quartz.config.ts の ignorePatterns も合わせること。
+# preview は Vault を直接 serve するため、除外の再現をそちらに持っている。
 rsync -av --delete --delete-excluded \
     --exclude='.obsidian' \
     --exclude='.trash' \

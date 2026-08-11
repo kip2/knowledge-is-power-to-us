@@ -26,6 +26,62 @@ Obsidianで編集した記事をそのまま公開できるように構築して
 
 [サイト作成テンプレートリポジトリ](https://github.com/kip2/publish-site-template/tree/main)
 
+## 使い方
+
+記事の実体は Vault の `publish/` 配下にあります。`content/` は同期先なので直接編集しないでください（`rsync --delete` で消えます）。
+
+### ローカルで確認する
+
+```bash
+docker compose up preview
+# → http://localhost:8080
+```
+
+Vault の `publish/` を直接 serve するので、**Obsidian で保存すればブラウザが自動リロードされます。** 同期コマンドを手で叩く必要はありません。止めるときは `Ctrl+C`、コンテナを片付けるなら `docker compose down`。
+
+ホスト側の 8080 が他のアプリに使われている場合は `.env` でポートを変更します。
+
+```env
+PREVIEW_PORT=8090
+QUARTZ_BASE_URL=localhost:8090
+```
+
+公開時と同じ静的ビルドを手元で再現したい場合はこちら。`public/` に出力されます。
+
+```bash
+docker compose run --rm build
+```
+
+### 公開する
+
+```bash
+./do-push.sh "update: 記事タイトル"
+```
+
+`sync.sh` による同期 → `git add content` → commit → push までを一括で実行します。push 後 GitHub Actions が走り、1〜3 分でサイトに反映されます。`content/` に差分が無ければ commit はスキップされます。
+
+同期だけ先に済ませて差分を確認したいときは以下。
+
+```bash
+./do-sync.sh
+git diff --stat content
+```
+
+`do-sync.sh` / `do-push.sh` は Docker とネイティブ実行を自動判定します。強制したい場合は `--docker` / `--native` を付けてください。
+
+### 公開されないもの
+
+`publish/` 配下に置いても、以下はプレビューにも公開物にも出ません。
+
+| 対象 | 用途 |
+|---|---|
+| `_` で始まる `.md` | 下書き（`_foo.md` のままなら公開されない） |
+| `README.md` | Vault 側の説明書き |
+| `.obsidian/`, `.trash/` | Obsidian の内部データ |
+| `private/`, `templates/` | 非公開ノート・テンプレート |
+
+初回構築の手順は [documents/SETUP.md](documents/SETUP.md)、ディレクトリ構成は [documents/STRUCTURE.md](documents/STRUCTURE.md) を参照。
+
 ## License
 
 このリポジトリには複数のライセンスが混在しているので注意してください。

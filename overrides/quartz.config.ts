@@ -74,7 +74,22 @@ const config: QuartzConfig = {
     analytics: null,
     locale: "ja-JP",
     baseUrl: BASE_URL,
-    ignorePatterns: ["private", "templates", ".obsidian"],
+    // preview は Vault の publish/ を直接 serve する（docker-compose.yml 参照）ため、
+    // sync.sh の rsync --exclude と同じ除外をここでも再現しておく必要がある。
+    // これが無いと「プレビューには出るが公開はされない」ページが生まれる。
+    // sync.sh 側の除外を変更したら、ここも合わせて更新すること。
+    ignorePatterns: [
+      "private",
+      "templates",
+      // sync.sh の --exclude と対応
+      ".obsidian",
+      "**/.obsidian/**",
+      "**/.trash/**",
+      "**/README.md",
+      "**/_*.md",
+      "**/.DS_Store",
+      "**/.gitkeep",
+    ],
     defaultDateType: "modified",
     theme: {
       fontOrigin: "googleFonts",

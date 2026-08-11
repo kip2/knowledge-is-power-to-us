@@ -17,8 +17,8 @@ export const sharedPageComponents: SharedLayout = {
   afterBody: [],
   footer: Component.Footer({
     links: {
-      "GitHub": "https://github.com/",
-      "Source": "https://github.com/",
+      "GitHub": "https://github.com/kip2",
+      "Source": "https://github.com/kip2/Knowledge-Is-Power-To-us",
     },
   }),
 }

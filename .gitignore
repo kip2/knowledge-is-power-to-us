@@ -41,3 +41,5 @@ Thumbs.db
 
 # Bootstrap 中の一時ファイル
 *.tmp
+
+CLAUDE.md

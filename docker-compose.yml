@@ -9,6 +9,14 @@
 #   3. docker compose run --rm build        # public/ への静的ビルドのみ
 #   4. docker compose run --rm shell        # コンテナ内 bash で個別操作
 #
+# preview と build で参照するディレクトリが異なる点に注意:
+#   - preview: Vault の publish/ を直接 serve する（同期を挟まない）
+#              → Obsidian で保存した瞬間にブラウザへ反映される
+#   - build:   sync.sh で content/ に同期してからビルドする
+#              → 実際に GitHub Pages へ公開されるのはこちらの経路
+# 両者の対象ファイル集合を揃えるため、sync.sh の rsync 除外と
+# quartz.config.ts の ignorePatterns は対応させてある。片方だけ変更しないこと。
+#
 # 共通設定は YAML アンカーで定義し、各サービスに継承する。
 
 x-base: &base
@@ -38,10 +46,20 @@ x-base: &base
 
 services:
   # ローカルプレビュー (http://localhost:8080)
+  #
+  # quartz build --serve は `-d` に渡したディレクトリを chokidar で監視するので、
+  # Vault の publish/ をそのまま渡せば Obsidian で保存した瞬間にリビルドされ、
+  # ブラウザも自動リロードされる。content/ への同期は挟まない。
+  #
+  # ただし .env 未設定時は /vault-publish が空スタブ (./.no-vault-stub) なので、
+  # 従来どおり sync.sh → content/ の経路にフォールバックする。
+  # （content/ のサンプルページと「.env 未設定」警告バナーを表示するため）
   preview:
     <<: *base
+    # ホスト側の 8080 が他サービスに埋まっている場合は
+    # .env で PREVIEW_PORT=8090 のように変更する（コンテナ側は 8080 固定）
     ports:
-      - "8080:8080"
+      - "${PREVIEW_PORT:-8080}:8080"
     command:
       - bash
       - -c
@@ -49,8 +67,18 @@ services:
         set -euo pipefail
         ./bootstrap.sh --ci
         [ -d node_modules ] || npm ci
-        ./sync.sh
-        npx quartz build --serve --port 8080
+        if [ -n "$$(find /vault-publish -type f -name '*.md' -print -quit 2>/dev/null)" ]; then
+            echo "👀 watching vault directly: /vault-publish"
+            echo "   Obsidian で保存すると自動でリロードされます"
+            echo
+            exec npx quartz build --serve -d /vault-publish --port 8080
+        else
+            echo "⚠️  /vault-publish に .md がありません (.env 未設定?)"
+            echo "   content/ のサンプルを表示します"
+            echo
+            ./sync.sh
+            exec npx quartz build --serve --port 8080
+        fi
 
   # 静的ビルドのみ (public/ を更新)
   build:

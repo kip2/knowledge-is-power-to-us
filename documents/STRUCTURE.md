@@ -170,9 +170,18 @@ Node 22 やその他ツールをホストに入れたくない利用者向けに
 
 | サービス | 役割 | 使い方 |
 |---|---|---|
-| `preview` | ホットリロード付きプレビュー (port 8080) | `docker compose up preview` |
-| `build` | 静的ビルドのみ (`public/` 生成) | `docker compose run --rm build` |
+| `preview` | **Vault を直接** serve するホットリロード付きプレビュー (既定 port 8080、`.env` の `PREVIEW_PORT` で変更可) | `docker compose up preview` |
+| `build` | `sync.sh` で `content/` に同期してから静的ビルド (`public/` 生成) | `docker compose run --rm build` |
 | `shell` | コンテナ内 bash で個別作業 | `docker compose run --rm shell` |
+
+`preview` と `build` で読むディレクトリが違う点に注意。
+
+```
+preview:  Vault publish/ ──────────────────────────→ quartz --serve
+build/CI: Vault publish/ ──[sync.sh]──→ content/ ──→ quartz build → GitHub Pages
+```
+
+`preview` が `content/` を経由しないのは、Quartz の `build --serve` が `-d` で渡したディレクトリを chokidar で監視するため。Vault をそのまま渡せば、Obsidian で保存した瞬間にリビルドされる。代わりに `sync.sh` の `rsync --exclude` が効かなくなるので、同等の除外を `overrides/quartz.config.ts` の `ignorePatterns` 側で再現している（**除外を変更するときは両方を更新すること**）。
 
 ### 設計判断
 
