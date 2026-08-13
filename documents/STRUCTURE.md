@@ -13,7 +13,12 @@
 │   ├── overrides/                      ← Quartz 標準ファイルを差し替えるための保管庫
 │   │   ├── deploy.yml
 │   │   ├── quartz.config.ts
-│   │   └── quartz.layout.ts
+│   │   ├── quartz.layout.ts
+│   │   ├── plugins/                    ← 自作プラグイン (→ quartz/plugins/custom/)
+│   │   │   └── linkCard.ts             ← 外部 URL を OGP カードに変換
+│   │   └── styles/
+│   │       └── custom.scss             ← 追加 CSS (→ quartz/styles/custom.scss)
+│   ├── og-cache/                       ← LinkCard の OGP 取得結果 (.gitignore 対象)
 │   ├── README.md                       ← クイックスタート
 │   ├── documents/SETUP.md              ← 詳細セットアップ手順
 │   ├── documents/STRUCTURE.md          ← このファイル
@@ -94,8 +99,21 @@
 | ファイル | 生成元 |
 |---|---|
 | `quartz.config.ts` / `quartz.layout.ts` | `overrides/` から bootstrap.sh がコピー |
+| `quartz/plugins/custom/*.ts` | `overrides/plugins/` から bootstrap.sh がコピー |
+| `quartz/styles/custom.scss` | `overrides/styles/custom.scss` から bootstrap.sh がコピー |
 | `globals.d.ts` / `index.d.ts` / `tsconfig.json` | Quartz upstream の git clone から取得 |
 | `.prettierrc` / `.prettierignore` | 同上（任意のフォーマッタ設定） |
+
+### 3-A-1. Quartz 本体へのパッチ
+
+`bootstrap.sh` は overrides のコピー後に、Quartz upstream のバグを `sed` で直す小さなパッチを当てる（`🩹 patching quartz/` のログが出る箇所）。`quartz/` は gitignore 対象で毎回再取得されるため、ソースを直接編集しても残らないための仕組み。
+
+| パッチ | 対象 | 内容 |
+|---|---|---|
+| `og:image:type` の MIME | `quartz/plugins/emitters/ogImage.tsx` | `getFileExtension()` がドット込みで `.webp` を返すため `image/.webp` という不正な MIME になっていた |
+| `og:site_name` の属性 | `quartz/components/Head.tsx` | 他の og タグは `property=` なのにここだけ `name=` になっていた |
+
+パッチは冪等で、置換対象が見つからない場合は警告を出してスキップする（upstream で修正された場合に気付けるようにするため）。不要になったら `bootstrap.sh` の該当ブロックごと削除する。
 
 ## 3-A. `quartz/` を gitignore する設計
 

@@ -10,6 +10,10 @@ quartz/
 public/
 .quartz-cache/
 
+# LinkCard が取得した外部サイトの OGP キャッシュ（overrides/plugins/linkCard.ts）
+# CI では毎回取得し直す。取得結果を固定したい場合はこの行を消して追跡する。
+og-cache/
+
 # Quartz upstream または overrides/ から bootstrap.sh が再生成するファイル
 # - quartz.config.ts / quartz.layout.ts は overrides/ をコピーして作成
 # - globals.d.ts / index.d.ts / tsconfig.json は Quartz upstream から取得

@@ -69,6 +69,21 @@ git diff --stat content
 
 `do-sync.sh` / `do-push.sh` は Docker とネイティブ実行を自動判定します。強制したい場合は `--docker` / `--native` を付けてください。
 
+### 外部リンクを OGP カードにする
+
+段落に外部 URL を**単独で**貼ると、リンク先の OGP を取得してカード表示になります。特別な記法は不要です。
+
+```markdown
+https://github.com/jackyzha0/quartz     ← カードになる
+
+詳細は https://example.com を参照       ← ならない（文中）
+[参考記事](https://example.com)          ← ならない（別テキスト指定）
+```
+
+Quartz v4 本体にこの機能は無いため、[overrides/plugins/linkCard.ts](overrides/plugins/linkCard.ts) で自作しています。ビルド時に OGP を取得し、`og-cache/` に URL ごとの JSON としてキャッシュします。2回目以降はネットワークアクセスが発生しません。
+
+リンク先が落ちている・OGP を持たない場合は、警告を出したうえで**素のリンクのまま**出力されるのでビルドは失敗しません。取得し直したいときは `og-cache/` の該当ファイルを削除してください。
+
 ### 公開されないもの
 
 `publish/` 配下に置いても、以下はプレビューにも公開物にも出ません。

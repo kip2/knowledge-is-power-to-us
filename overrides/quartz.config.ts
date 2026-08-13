@@ -1,5 +1,8 @@
 import { QuartzConfig } from "./quartz/cfg"
 import * as Plugin from "./quartz/plugins"
+// 自作プラグイン。実体は overrides/plugins/ にあり、bootstrap.sh が
+// quartz/plugins/custom/ へコピーする。
+import { LinkCard } from "./quartz/plugins/custom/linkCard"
 import { readFileSync, existsSync } from "fs"
 import { dirname, join } from "path"
 import { fileURLToPath } from "url"
@@ -141,8 +144,13 @@ const config: QuartzConfig = {
       Plugin.ObsidianFlavoredMarkdown({ enableInHtmlEmbed: false }),
       Plugin.GitHubFlavoredMarkdown(),
       Plugin.TableOfContents(),
+      // 単独行に貼られた外部 URL を OGP カードに変換する（自作）
+      LinkCard(),
       Plugin.CrawlLinks({ markdownLinkResolution: "shortest" }),
-      Plugin.Description(),
+      // 日本語は "。" 区切りのため Quartz の文単位の切り出し (`. ` で split) が
+      // 効かず、常に maxDescriptionLength での切り詰めになる。
+      // OGP の説明文として長すぎるので上限を短くしている。
+      Plugin.Description({ descriptionLength: 120, maxDescriptionLength: 140 }),
       Plugin.Latex({ renderEngine: "katex" }),
     ],
     filters: [Plugin.RemoveDrafts()],

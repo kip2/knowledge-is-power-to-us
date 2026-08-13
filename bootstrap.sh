@@ -127,6 +127,63 @@ if [[ -f overrides/deploy.yml ]]; then
     cp overrides/deploy.yml .github/workflows/deploy.yml
     echo "  ✓ .github/workflows/deploy.yml"
 fi
+# 自作プラグインは quartz/plugins/custom/ に置く。
+# quartz/ は git 管理外で bootstrap が再生成するため、実体は overrides/ 側が持つ。
+if [[ -d overrides/plugins ]] && compgen -G 'overrides/plugins/*.ts' >/dev/null; then
+    mkdir -p quartz/plugins/custom
+    cp overrides/plugins/*.ts quartz/plugins/custom/
+    echo "  ✓ quartz/plugins/custom/ ($(ls -1 overrides/plugins/*.ts | wc -l) files)"
+fi
+# custom.scss は quartz/plugins/emitters/componentResources.ts が読み込む
+if [[ -f overrides/styles/custom.scss ]]; then
+    cp overrides/styles/custom.scss quartz/styles/custom.scss
+    echo "  ✓ quartz/styles/custom.scss"
+fi
+
+# ── Quartz 本体への修正パッチ ──────────────────────────────────
+# upstream のバグをその場で直す。sed の置換前パターンが見つからない場合は
+# 「upstream 側で修正された」か「実装が変わった」ので警告を出す。
+# パッチが不要になったらこのブロックごと削除すること。
+apply_patch() {
+    local label="$1" file="$2" before="$3" after="$4"
+
+    if [[ ! -f "$file" ]]; then
+        echo "  ⚠ $label: $file が見つかりません（スキップ）"
+        return 0
+    fi
+    if grep -qF "$after" "$file"; then
+        echo "  ✓ $label (適用済み)"
+        return 0
+    fi
+    if ! grep -qF "$before" "$file"; then
+        echo "  ⚠ $label: 置換対象が見つかりません。upstream で修正済みか実装が変わった可能性があります"
+        echo "     対象: $file"
+        return 0
+    fi
+
+    local tmp
+    tmp="$(mktemp)"
+    # 置換前後にスラッシュを含むため、区切り文字に | を使う
+    sed "s|$(printf '%s' "$before" | sed 's/[|]/\\|/g')|$(printf '%s' "$after" | sed 's/[|]/\\|/g')|g" \
+        "$file" > "$tmp"
+    mv "$tmp" "$file"
+    echo "  ✓ $label"
+}
+
+echo "🩹 patching quartz/"
+# getFileExtension() はドット込みで ".webp" を返すため、
+# og:image:type が "image/.webp" という不正な MIME になっていた
+apply_patch \
+    "ogImage.tsx: og:image:type の MIME を修正" \
+    "quartz/plugins/emitters/ogImage.tsx" \
+    'const ogImageMimeType = `image/${getFileExtension(ogImagePath) ?? "png"}`' \
+    'const ogImageMimeType = `image/${getFileExtension(ogImagePath)?.slice(1) ?? "png"}`'
+# og:site_name だけ property= ではなく name= になっていた
+apply_patch \
+    "Head.tsx: og:site_name を property= に修正" \
+    "quartz/components/Head.tsx" \
+    '<meta name="og:site_name"' \
+    '<meta property="og:site_name"'
 
 # content/ が空でも残るように .gitkeep を入れておく
 mkdir -p content
